@@ -2,8 +2,12 @@
 
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
-postgres_local_base = 'postgresql://postgres:@localhost/'
-database_name = 'rotten_potatoes'
+database_host = os.getenv('DB_HOST')
+database_port = os.getenv('DB_PORT')
+database_username = os.getenv('DB_USERNAME')
+database_password = os.getenv('DB_PASSWORD')
+postgres_local_base = 'postgresql://{}:{}@{}:{}/'.format(database_username, database_password, database_host, database_port)
+database_name = os.getenv('DB_NAME')
 
 
 class BaseConfig:

@@ -5,6 +5,7 @@ import os
 import unittest
 import coverage
 
+from dotenv import load_dotenv
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
@@ -18,6 +19,8 @@ COV = coverage.coverage(
     ]
 )
 COV.start()
+
+load_dotenv()
 
 from project.server import app, db, models
 
