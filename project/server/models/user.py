@@ -1,8 +1,11 @@
+# project/server/models/user.py
+
 import jwt
 import datetime
 
 from project.server import app, db, bcrypt
 from .blacklistToken import BlacklistToken
+
 
 class User(db.Model):
     """ User Model for storing user related details """

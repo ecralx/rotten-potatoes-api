@@ -1,3 +1,5 @@
+# project/server/models/blacklistToken.py
+
 import datetime
 
 from project.server import app, db, bcrypt
