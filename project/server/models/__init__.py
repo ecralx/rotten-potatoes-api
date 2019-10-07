@@ -2,3 +2,4 @@
 from .user import User
 from .blacklistToken import BlacklistToken
 from .tmdb import Tmdb
+from .show import Show
