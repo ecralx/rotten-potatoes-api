@@ -25,7 +25,7 @@ class DiscoverAPI(MethodView):
             shows = [Show.from_dict(show).to_dict() for show in data['results']]
             response_object = {
                 'status': 'success',
-                'message': 'Successfully registered.',
+                'message': 'Successfully got shows.',
                 'results': shows,
                 'page': page,
                 'total_results': total_results,
