@@ -19,19 +19,26 @@ class DiscoverAPI(MethodView):
         try:
             requested_page = request.args.get('page', default = 1, type = int)
             response = Tmdb.discover(page = requested_page)
-            data = json.loads(response.data.decode())
-            page = data['page']
-            total_results = data['total_results']
-            total_pages = data['total_pages']
-            shows = [Show.from_dict(show).to_dict() for show in data['results']]
+            response_object = Tmdb.convert_to_response_object(response)
+            return make_response(jsonify(response_object)), 200
+        except:
             response_object = {
-                'status': 'success',
-                'message': 'Successfully got shows.',
-                'results': shows,
-                'page': page,
-                'total_results': total_results,
-                'total_pages': total_pages,
+                'status': 'fail',
+                'message': 'Failed to communicate with the tmdb API'
             }
+            return make_response(jsonify(response_object)), 500
+
+class SearchAPI(MethodView):
+    """
+    Search tv shows resource
+    """
+
+    def get(self):
+        try:
+            requested_query = request.args.get('query', type = str)
+            requested_page = request.args.get('page', default = 1, type = int)
+            response = Tmdb.search(query = requested_query, page = requested_page)
+            response_object = Tmdb.convert_to_response_object(response)
             return make_response(jsonify(response_object)), 200
         except:
             response_object = {
@@ -42,10 +49,16 @@ class DiscoverAPI(MethodView):
 
 # define the API resources
 discover_view = DiscoverAPI.as_view('discover_api')
+search_view = SearchAPI.as_view('search_api')
 
 # add Rules for API Endpoints
 show_blueprint.add_url_rule(
     '/show/discover',
     view_func=discover_view,
+    methods=['GET']
+)
+show_blueprint.add_url_rule(
+    '/show/search',
+    view_func=search_view,
     methods=['GET']
 )

@@ -1,9 +1,11 @@
 # project/server/models/tmdb.py
 
 import os
+import json
 
 from urllib import request, parse
 from urllib.error import HTTPError
+from .show import Show
 
 class Response():
     """
@@ -46,9 +48,43 @@ class Tmdb():
     base_url = 'https://api.themoviedb.org/3/'
     
     @staticmethod
+    def convert_to_response_object(response):
+        data = json.loads(response.data.decode())
+        page = data['page']
+        total_results = data['total_results']
+        total_pages = data['total_pages']
+        shows = [Show.from_dict(show).to_dict() for show in data['results']]
+        return {
+            'status': 'success',
+            'message': 'Successfully got shows.',
+            'results': shows,
+            'page': page,
+            'total_results': total_results,
+            'total_pages': total_pages,
+        }
+
+    @staticmethod
     def discover(page = 1):
         endpoint = 'discover/tv'
         params = {
+            'page': page,
+            'api_key': os.getenv('TMDB_API_KEY')
+        }
+        query_string = parse.urlencode(params)
+        url = Tmdb.base_url + endpoint + "?" + query_string
+        try:
+            return Api.parse_http_response_object(request.urlopen(url))
+        except HTTPError as e:
+            return Api.parse_http_error(e)
+        except:
+            message = 'Sorry we couldn\'t reach the TMDB API..'
+            return Response(500, message.encode)
+
+    @staticmethod
+    def search(query, page = 1):
+        endpoint = 'search/tv'
+        params = {
+            'query': query,
             'page': page,
             'api_key': os.getenv('TMDB_API_KEY')
         }
