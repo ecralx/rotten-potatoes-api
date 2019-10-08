@@ -32,9 +32,9 @@ manager.add_command('db', MigrateCommand)
 
 
 @manager.command
-def test():
+def test(pattern='test*.py'):
     """Runs the unit tests without test coverage."""
-    tests = unittest.TestLoader().discover('project/tests', pattern='test*.py')
+    tests = unittest.TestLoader().discover('project/tests', pattern=pattern)
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         return 0
