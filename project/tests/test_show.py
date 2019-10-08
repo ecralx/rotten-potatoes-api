@@ -46,7 +46,7 @@ class TestShowBlueprint(BaseTestCase):
                 self.assertTrue(show['tmdb_id'])
 
     def test_detail(self):
-        """ Testing show's details """
+        """ Testing a show's details """
         with self.client:
             response = self.client.get(
                 '/show/69740'
@@ -59,6 +59,23 @@ class TestShowBlueprint(BaseTestCase):
             self.assertTrue(data['poster_path'])
             self.assertTrue(data['vote_average'])
             self.assertEqual(data['original_language'], 'en')
+
+    def test_similar(self):
+        """ Testing a show's similar shows"""
+        with self.client:
+            response = self.client.get(
+                '/show/69740/similar'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(data['page'])
+            self.assertTrue(int(data['page']))
+            self.assertTrue(data['total_results'])
+            self.assertTrue(data['total_pages'])
+            for show in data['results']:
+                self.assertTrue(show['name'])
+                self.assertTrue(show['tmdb_id'])
 
 
 if __name__ == '__main__':

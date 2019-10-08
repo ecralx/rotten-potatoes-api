@@ -29,6 +29,22 @@ class TestTmdb(BaseTestCase):
         self.assertTrue(isinstance(data['results'], list))
         # TODO check if all the shows are in the good format
 
+    def test_detail(self):
+        """ Testing the TMDB API get show """
+        response = Tmdb.detail(69740)
+        self.assertTrue(int(response.status_code) == 200)
+        data = json.loads(response.data.decode())
+        self.assertTrue(data['id'])
+        self.assertTrue(data['name'])
+        # TODO finish checks on other attributes
+
+    def test_similar(self):
+        """ Testing the TMDB API similar endpoint """
+        response = Tmdb.similar(69740)
+        self.assertTrue(int(response.status_code) == 200)
+        data = json.loads(response.data.decode())
+        self.assertTrue(isinstance(data['results'], list))
+        # TODO check if all the shows are in the good format
 
 if __name__ == '__main__':
     unittest.main()
