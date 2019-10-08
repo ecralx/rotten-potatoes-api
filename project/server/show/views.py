@@ -16,10 +16,10 @@ class DiscoverAPI(MethodView):
     """
 
     def get(self):
+        requested_page = request.args.get('page', default = 1, type = int)
         try:
-            requested_page = request.args.get('page', default = 1, type = int)
             response = Tmdb.discover(page = requested_page)
-            response_object = Tmdb.convert_to_response_object(response)
+            response_object = Tmdb.convert_list_to_response_object(response)
             return make_response(jsonify(response_object)), 200
         except:
             response_object = {
@@ -34,22 +34,56 @@ class SearchAPI(MethodView):
     """
 
     def get(self):
-        try:
-            requested_query = request.args.get('query', type = str)
-            requested_page = request.args.get('page', default = 1, type = int)
-            response = Tmdb.search(query = requested_query, page = requested_page)
-            response_object = Tmdb.convert_to_response_object(response)
-            return make_response(jsonify(response_object)), 200
-        except:
+        requested_query = request.args.get('query', type = str)
+        requested_page = request.args.get('page', default = 1, type = int)
+        if (requested_query):
+            try:
+                response = Tmdb.search(query = requested_query, page = requested_page)
+                response_object = Tmdb.convert_list_to_response_object(response)
+                return make_response(jsonify(response_object)), 200
+            except:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Failed to communicate with the tmdb API'
+                }
+                return make_response(jsonify(response_object)), 500
+        else:
             response_object = {
                 'status': 'fail',
-                'message': 'Failed to communicate with the tmdb API'
+                'message': 'You need to specify the searched term.'
             }
-            return make_response(jsonify(response_object)), 500
+            return make_response(jsonify(response_object)), 404
+
+class DetailAPI(MethodView):
+    """
+    Search tv shows resource
+    """
+
+    def get(self, tmdb_id):
+        if (int(tmdb_id) > 0):
+            try:
+                response = Tmdb.detail(int(tmdb_id))
+                data = json.loads(response.data.decode())
+                response_object = Show.from_dict(data).to_dict()
+                return make_response(jsonify(response_object)), 200
+            except:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Failed to communicate with the tmdb API'
+                }
+                return make_response(jsonify(response_object)), 500
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'The TMDB id specified is invalid.'
+            }
+            return make_response(jsonify(response_object)), 404
+
 
 # define the API resources
 discover_view = DiscoverAPI.as_view('discover_api')
 search_view = SearchAPI.as_view('search_api')
+detail_view = DetailAPI.as_view('detail_api')
 
 # add Rules for API Endpoints
 show_blueprint.add_url_rule(
@@ -60,5 +94,10 @@ show_blueprint.add_url_rule(
 show_blueprint.add_url_rule(
     '/show/search',
     view_func=search_view,
+    methods=['GET']
+)
+show_blueprint.add_url_rule(
+    '/show/<tmdb_id>',
+    view_func=detail_view,
     methods=['GET']
 )

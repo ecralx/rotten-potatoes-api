@@ -48,7 +48,7 @@ class Tmdb():
     base_url = 'https://api.themoviedb.org/3/'
     
     @staticmethod
-    def convert_to_response_object(response):
+    def convert_list_to_response_object(response):
         data = json.loads(response.data.decode())
         page = data['page']
         total_results = data['total_results']
@@ -56,7 +56,7 @@ class Tmdb():
         shows = [Show.from_dict(show).to_dict() for show in data['results']]
         return {
             'status': 'success',
-            'message': 'Successfully got shows.',
+            'message': 'Successfully got the shows.',
             'results': shows,
             'page': page,
             'total_results': total_results,
@@ -86,6 +86,22 @@ class Tmdb():
         params = {
             'query': query,
             'page': page,
+            'api_key': os.getenv('TMDB_API_KEY')
+        }
+        query_string = parse.urlencode(params)
+        url = Tmdb.base_url + endpoint + "?" + query_string
+        try:
+            return Api.parse_http_response_object(request.urlopen(url))
+        except HTTPError as e:
+            return Api.parse_http_error(e)
+        except:
+            message = 'Sorry we couldn\'t reach the TMDB API..'
+            return Response(500, message.encode)
+
+    @staticmethod
+    def detail(tmdb_id):
+        endpoint = 'tv/{}'.format(tmdb_id)
+        params = {
             'api_key': os.getenv('TMDB_API_KEY')
         }
         query_string = parse.urlencode(params)

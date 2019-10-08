@@ -45,6 +45,21 @@ class TestShowBlueprint(BaseTestCase):
                 self.assertTrue(show['name'])
                 self.assertTrue(show['tmdb_id'])
 
+    def test_detail(self):
+        """ Testing show's details """
+        with self.client:
+            response = self.client.get(
+                '/show/69740'
+            )
+            data = json.loads(response.data.decode())
+            self.assertTrue(response.content_type == 'application/json')
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(data['name'], 'Ozark')
+            self.assertTrue(data['overview'])
+            self.assertTrue(data['poster_path'])
+            self.assertTrue(data['vote_average'])
+            self.assertEqual(data['original_language'], 'en')
+
 
 if __name__ == '__main__':
     unittest.main()
