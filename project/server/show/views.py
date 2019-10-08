@@ -17,7 +17,8 @@ class DiscoverAPI(MethodView):
 
     def get(self):
         try:
-            response = Tmdb.discover()
+            requested_page = request.args.get('page', default = 1, type = int)
+            response = Tmdb.discover(page = requested_page)
             data = json.loads(response.data.decode())
             page = data['page']
             total_results = data['total_results']

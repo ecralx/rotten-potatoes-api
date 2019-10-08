@@ -13,13 +13,14 @@ class TestShowBlueprint(BaseTestCase):
         """ Testing shows discovery """
         with self.client:
             response = self.client.get(
-                '/show/discover',
+                '/show/discover?page=2',
             )
             data = json.loads(response.data.decode())
             self.assertTrue(data['status'] == 'success')
             self.assertTrue(response.content_type == 'application/json')
             self.assertEqual(response.status_code, 200)
             self.assertTrue(data['page'])
+            self.assertEqual(int(data['page']), 2)
             self.assertTrue(data['total_results'])
             self.assertTrue(data['total_pages'])
             for show in data['results']:
