@@ -1,4 +1,4 @@
-# project/tests/test_api.py
+# project/tests/test_tmdb.py
 
 
 import unittest
@@ -19,7 +19,7 @@ class TestTmdb(BaseTestCase):
         self.assertTrue(int(response.status_code) == 200)
         data = json.loads(response.data.decode())
         self.assertTrue(isinstance(data['results'], list))
-        # TODO check if all the shows are in the good format
+        # TODO check if all the shows are in the good format (can be from_dict/to_dict)
 
     def test_search(self):
         """ Testing the TMDB API search endpoint """
@@ -27,7 +27,7 @@ class TestTmdb(BaseTestCase):
         self.assertTrue(int(response.status_code) == 200)
         data = json.loads(response.data.decode())
         self.assertTrue(isinstance(data['results'], list))
-        # TODO check if all the shows are in the good format
+        # TODO check if all the shows are in the good format (can be from_dict/to_dict)
 
     def test_detail(self):
         """ Testing the TMDB API get show """
@@ -36,7 +36,7 @@ class TestTmdb(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertTrue(data['id'])
         self.assertTrue(data['name'])
-        # TODO finish checks on other attributes
+        # TODO check if all the shows are in the good format (can be from_dict/to_dict)
 
     def test_similar(self):
         """ Testing the TMDB API similar endpoint """
@@ -44,7 +44,7 @@ class TestTmdb(BaseTestCase):
         self.assertTrue(int(response.status_code) == 200)
         data = json.loads(response.data.decode())
         self.assertTrue(isinstance(data['results'], list))
-        # TODO check if all the shows are in the good format
+        # TODO check if all the shows are in the good format (can be from_dict/to_dict)
 
 if __name__ == '__main__':
     unittest.main()
