@@ -130,3 +130,19 @@ class Tmdb():
         except:
             message = 'Sorry we couldn\'t reach the TMDB API..'
             return Response(500, message.encode)
+    
+    @staticmethod
+    def season(tmdb_show_id, season_number):
+        endpoint = 'tv/{}/season/{}'.format(tmdb_show_id, season_number)
+        params = {
+            'api_key': os.getenv('TMDB_API_KEY')
+        }
+        query_string = parse.urlencode(params)
+        url = Tmdb.base_url + endpoint + "?" + query_string
+        try:
+            return Api.parse_http_response_object(request.urlopen(url))
+        except HTTPError as e:
+            return Api.parse_http_error(e)
+        except:
+            message = 'Sorry we couldn\'t reach the TMDB API..'
+            return Response(500, message.encode)

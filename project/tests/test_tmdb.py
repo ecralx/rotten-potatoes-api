@@ -45,6 +45,15 @@ class TestTmdb(BaseTestCase):
         data = json.loads(response.data.decode())
         self.assertTrue(isinstance(data['results'], list))
         # TODO check if all the shows are in the good format (can be from_dict/to_dict)
+    
+    def test_seasons(self):
+        """ Testing the TMDB API seasons endpoint """
+        response = Tmdb.season(tmdb_show_id = 69740, season_number = 1)
+        self.assertTrue(int(response.status_code) == 200)
+        data = json.loads(response.data.decode())
+        self.assertTrue(isinstance(data['episodes'], list))
+        # TODO check if all the shows are in the good format (can be from_dict/to_dict)
+        
 
 if __name__ == '__main__':
     unittest.main()

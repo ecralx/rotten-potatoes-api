@@ -6,7 +6,7 @@ from flask import Blueprint, request, make_response, jsonify
 from flask.views import MethodView
 
 from project.server import bcrypt, db
-from project.server.models import Tmdb, Show
+from project.server.models import Tmdb, Show, Season
 
 show_blueprint = Blueprint('show', __name__)
 
@@ -104,12 +104,39 @@ class SimilarAPI(MethodView):
             }
             return make_response(jsonify(response_object)), 404
 
+class SeasonAPI(MethodView):
+    """
+    Season (tv shows) resource
+    """
+
+    def get(self, tmdb_show_id, season_number):
+        if (int(tmdb_show_id) > 0 and int(season_number) > 0):
+            try:
+                response = Tmdb.season(tmdb_show_id = tmdb_show_id, season_number = season_number)
+                data = json.loads(response.data.decode())                
+                response_object = Season.from_dict(data).to_dict()
+                return make_response(jsonify(response_object)), 200
+            except:
+                response_object = {
+                    'status': 'fail',
+                    'message': 'Failed to communicate with the tmdb API.'
+                }
+                return make_response(jsonify(response_object)), 500
+        else:
+            response_object = {
+                'status': 'fail',
+                'message': 'The TMDB id or the season number specified is invalid.'
+            }
+            return make_response(jsonify(response_object)), 404
+
+
 
 # define the API resources
 discover_view = DiscoverAPI.as_view('discover_api')
 search_view = SearchAPI.as_view('search_api')
 detail_view = DetailAPI.as_view('detail_api')
 similar_view = SimilarAPI.as_view('similar_api')
+season_view = SeasonAPI.as_view('season_api')
 
 # add Rules for API Endpoints
 show_blueprint.add_url_rule(
@@ -130,5 +157,10 @@ show_blueprint.add_url_rule(
 show_blueprint.add_url_rule(
     '/show/<tmdb_id>/similar',
     view_func=similar_view,
+    methods=['GET']
+)
+show_blueprint.add_url_rule(
+    '/show/<tmdb_show_id>/season/<season_number>',
+    view_func=season_view,
     methods=['GET']
 )
