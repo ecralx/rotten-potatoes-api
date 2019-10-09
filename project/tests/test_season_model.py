@@ -1,4 +1,4 @@
-# project/tests/test_show_model.py
+# project/tests/test_season_model.py
 
 
 import unittest

@@ -1,4 +1,4 @@
-# project/tests/test_show_model.py
+# project/tests/test_episode_model.py
 
 
 import unittest
@@ -20,7 +20,7 @@ MOCKED_TO_DICT = {
     'overview': 'blablabla'
 }
 
-class TestSeasonModel(BaseTestCase):
+class TestEpisodeModel(BaseTestCase):
     """
     Testing the Episode model's behaviour
     """

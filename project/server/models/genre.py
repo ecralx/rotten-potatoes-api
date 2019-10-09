@@ -1,4 +1,4 @@
-# project/server/models/tmdb.py
+# project/server/models/genre.py
 
 class Genre():
 

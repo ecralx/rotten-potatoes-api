@@ -1,4 +1,4 @@
-# project/server/models/tmdb.py
+# project/server/models/season.py
 
 from .episode import Episode
 

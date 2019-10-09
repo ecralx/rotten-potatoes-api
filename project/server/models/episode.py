@@ -1,4 +1,4 @@
-# project/server/models/tmdb.py
+# project/server/models/episode.py
 
 class Episode():
 
