@@ -5,3 +5,4 @@ from .tmdb import Tmdb
 from .show import Show
 from .season import Season
 from .episode import Episode
+from .favourite import Favourite
