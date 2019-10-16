@@ -16,7 +16,7 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     password = db.Column(db.String(255), nullable=False)
     registered_on = db.Column(db.DateTime, nullable=False)
-    favourites = db.relationship(lambda: Favourite, backref='user')
+    favourites = db.relationship(lambda: Favourite, cascade="all, delete-orphan", backref='user')
 
     def __init__(self, email, password):
         self.email = email

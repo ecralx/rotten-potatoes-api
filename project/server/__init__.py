@@ -24,3 +24,6 @@ app.register_blueprint(auth_blueprint)
 
 from project.server.show.views import show_blueprint
 app.register_blueprint(show_blueprint)
+
+from project.server.user.views import user_blueprint
+app.register_blueprint(user_blueprint)
