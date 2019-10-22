@@ -28,4 +28,4 @@ class Favourite(db.Model):
             data = response.json()
             return Show.from_dict(data)
         else:
-            raise Exception('Could\'nt reach the server')
+            raise Exception('Couldn\'t reach the server')

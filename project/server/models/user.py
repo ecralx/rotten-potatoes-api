@@ -95,6 +95,6 @@ class User(db.Model):
             try:
                 favourite_shows.append(favourite.get_show())
             except:
-                # Could'nt find the user's favourite on TMDB
+                # Couldn't find the user's favourite on TMDB
                 pass
         return favourite_shows
