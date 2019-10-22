@@ -6,6 +6,8 @@ import datetime
 from project.server import app, db, bcrypt
 from .blacklistToken import BlacklistToken
 from .favourite import Favourite
+from .tmdb import Tmdb
+from .show import Show
 
 
 class User(db.Model):
@@ -85,3 +87,10 @@ class User(db.Model):
             self.favourites = [favourite for favourite in self.favourites if favourite.tmdb_id != int(tmdb_id) ]
         else:
             raise Exception('Cannot remove an inexistant favourite')
+
+    def get_favourites(self, begin = 0, end = 10):
+        favourites = self.favourites[begin:end]
+        favourite_shows = []
+        for favourite in favourites:
+            favourite_shows.append(favourite.get_show())
+        return favourite_shows

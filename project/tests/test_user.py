@@ -83,8 +83,27 @@ class TestUserBlueprint(BaseTestCase):
             self.assertTrue(data['status'] == 'fail')
             self.assertEqual(response.status_code, 500)
 
+    def test_list_favourites(self):
+        """ Testing API's list a user's all favourite shows """
+        with self.client:
+            resp_register = register_user(self, 'joe@gmail.com', '123456')
+            auth_token = json.loads(
+                resp_register.data.decode()
+            )['auth_token']
+            add_favourite(self, 69740, auth_token)
+            response = self.client.get(
+                '/user/favourites',
+                headers={
+                    'Authorization': 'Bearer ' + auth_token
+                }
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(len(data['results']) > 0)
+            show = data['results'].pop()
+            self.assertTrue(show['tmdb_id'])
+            self.assertEqual(show['name'], 'Ozark')
     
-
-
 if __name__ == '__main__':
     unittest.main()
