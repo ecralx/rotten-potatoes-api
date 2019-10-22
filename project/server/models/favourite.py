@@ -23,9 +23,9 @@ class Favourite(db.Model):
         Get the show object from a favourite
         :return: Show
         """
-        try:
-            response = Tmdb.detail(tmdb_id = self.tmdb_id)
-            data = json.loads(response.data.decode())
+        response = Tmdb.detail(tmdb_id = self.tmdb_id)
+        if (response):
+            data = response.json()
             return Show.from_dict(data)
-        except Exception as e:
-            return e
+        else:
+            raise Exception('Could\'nt reach the server')

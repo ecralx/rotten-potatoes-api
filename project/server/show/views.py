@@ -17,11 +17,11 @@ class DiscoverAPI(MethodView):
 
     def get(self):
         requested_page = request.args.get('page', default = 1, type = int)
-        try:
-            response = Tmdb.discover(page = requested_page)
+        response = Tmdb.discover(page = requested_page)
+        if (response):
             response_object = Tmdb.convert_list_to_response_object(response)
             return make_response(jsonify(response_object)), 200
-        except:
+        else:
             response_object = {
                 'status': 'fail',
                 'message': 'Failed to communicate with the tmdb API.'
@@ -37,16 +37,16 @@ class SearchAPI(MethodView):
         requested_query = request.args.get('query', type = str)
         requested_page = request.args.get('page', default = 1, type = int)
         if (requested_query):
-            try:
-                response = Tmdb.search(query = requested_query, page = requested_page)
+            response = Tmdb.search(query = requested_query, page = requested_page)
+            if (response):
                 response_object = Tmdb.convert_list_to_response_object(response)
                 return make_response(jsonify(response_object)), 200
-            except:
+            else:
                 response_object = {
                     'status': 'fail',
                     'message': 'Failed to communicate with the tmdb API.'
                 }
-                return make_response(jsonify(response_object)), 500
+                return make_response(jsonify(response_object)), 500    
         else:
             response_object = {
                 'status': 'fail',
@@ -61,12 +61,12 @@ class DetailAPI(MethodView):
 
     def get(self, tmdb_id):
         if (int(tmdb_id) > 0):
-            try:
-                response = Tmdb.detail(tmdb_id = int(tmdb_id))
-                data = json.loads(response.data.decode())
+            response = Tmdb.detail(tmdb_id = int(tmdb_id))
+            if (response):
+                data = response.json()
                 response_object = Show.from_dict(data).to_dict()
                 return make_response(jsonify(response_object)), 200
-            except:
+            else:
                 response_object = {
                     'status': 'fail',
                     'message': 'Failed to communicate with the tmdb API.'
@@ -87,11 +87,11 @@ class SimilarAPI(MethodView):
     def get(self, tmdb_id):
         requested_page = request.args.get('page', default = 1, type = int)
         if (int(tmdb_id) > 0):
-            try:
-                response = Tmdb.similar(tmdb_id = tmdb_id, page = requested_page)
+            response = Tmdb.similar(tmdb_id = tmdb_id, page = requested_page)
+            if (response):
                 response_object = Tmdb.convert_list_to_response_object(response)
                 return make_response(jsonify(response_object)), 200
-            except:
+            else:
                 response_object = {
                     'status': 'fail',
                     'message': 'Failed to communicate with the tmdb API.'
@@ -111,12 +111,12 @@ class SeasonAPI(MethodView):
 
     def get(self, tmdb_show_id, season_number):
         if (int(tmdb_show_id) > 0 and int(season_number) > 0):
-            try:
-                response = Tmdb.season(tmdb_show_id = tmdb_show_id, season_number = season_number)
-                data = json.loads(response.data.decode())                
+            response = Tmdb.season(tmdb_show_id = tmdb_show_id, season_number = season_number)
+            if (response):
+                data = response.json()
                 response_object = Season.from_dict(data).to_dict()
                 return make_response(jsonify(response_object)), 200
-            except:
+            else:
                 response_object = {
                     'status': 'fail',
                     'message': 'Failed to communicate with the tmdb API.'

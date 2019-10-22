@@ -92,5 +92,9 @@ class User(db.Model):
         favourites = self.favourites[begin:end]
         favourite_shows = []
         for favourite in favourites:
-            favourite_shows.append(favourite.get_show())
+            try:
+                favourite_shows.append(favourite.get_show())
+            except:
+                # Could'nt find the user's favourite on TMDB
+                pass
         return favourite_shows
