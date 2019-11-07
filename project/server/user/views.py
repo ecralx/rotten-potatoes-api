@@ -21,7 +21,7 @@ class AddFavouriteAPI(MethodView):
         if (user):
             post_data = request.get_json()
             tmdb_id = post_data.get('tmdb_id')
-            if (int(tmdb_id)):
+            if (tmdb_id.isdecimal() and int(tmdb_id)):
                 try:
                     user.add_favourite(tmdb_id)
                     db.session.commit()
@@ -60,7 +60,7 @@ class RemoveFavouriteAPI(MethodView):
         if (user):
             post_data = request.get_json()
             tmdb_id = post_data.get('tmdb_id')
-            if (int(tmdb_id)):
+            if (tmdb_id.isdecimal() and int(tmdb_id)):
                 try:
                     user.remove_favourite(tmdb_id)
                     db.session.commit()
