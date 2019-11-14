@@ -60,7 +60,7 @@ class DetailAPI(MethodView):
     """
 
     def get(self, tmdb_id):
-        if (tmdb_id.isdecimal() and int(tmdb_id) > 0):
+        if (((isinstance(tmdb_id, str) and tmdb_id.isdecimal()) or (isinstance(tmdb_id, int))) and int(tmdb_id) > 0):
             response = Tmdb.detail(tmdb_id = int(tmdb_id))
             if (response):
                 data = response.json()
@@ -86,7 +86,7 @@ class SimilarAPI(MethodView):
 
     def get(self, tmdb_id):
         requested_page = request.args.get('page', default = 1, type = int)
-        if (tmdb_id.isdecimal() and int(tmdb_id) > 0):
+        if (((isinstance(tmdb_id, str) and tmdb_id.isdecimal()) or (isinstance(tmdb_id, int))) and int(tmdb_id) > 0):
             response = Tmdb.similar(tmdb_id = tmdb_id, page = requested_page)
             if (response):
                 response_object = Tmdb.convert_list_to_response_object(response)
@@ -110,7 +110,7 @@ class SeasonAPI(MethodView):
     """
 
     def get(self, tmdb_show_id, season_number):
-        if (tmdb_show_id.isdecimal() and season_number.isdecimal() and int(tmdb_show_id) > 0 and int(season_number) > 0):
+        if (((isinstance(tmdb_show_id, str) and tmdb_show_id.isdecimal()) or (isinstance(tmdb_show_id, int))) and ((isinstance(season_number, str) and season_number.isdecimal()) or (isinstance(season_number, int))) and int(tmdb_show_id) > 0):
             response = Tmdb.season(tmdb_show_id = tmdb_show_id, season_number = season_number)
             if (response):
                 data = response.json()
