@@ -96,7 +96,7 @@ class GetFavouritesAPI(MethodView):
     """
     @auth_middleware
     def get(self, user = None):
-        OFFSET = 10
+        OFFSET = 20
         if (user):
             try:
                 requested_page = request.args.get('page', default = 1, type = int)
