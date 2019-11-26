@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
-requests_cache.install_cache('tmdb_cache', backend='redis', expire_after=3600*24)
+requests_cache.install_cache('tmdb_cache', backend='memory', expire_after=3600*24)
 
 
 COV = coverage.coverage(
