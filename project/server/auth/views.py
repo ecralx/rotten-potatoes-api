@@ -71,20 +71,23 @@ class LoginAPI(MethodView):
                     response_object = {
                         'status': 'success',
                         'message': 'Successfully logged in.',
-                        'auth_token': auth_token.decode()
+                        'auth_token': auth_token.decode(),
+                        'status_code': 200
                     }
                     return make_response(jsonify(response_object)), 200
             else:
                 response_object = {
                     'status': 'fail',
-                    'message': 'There is a problem with your email and/or password.'
+                    'message': 'There is a problem with your email and/or password.',
+                    'status_code': 404
                 }
                 return make_response(jsonify(response_object)), 404
         except Exception as e:
             print(e)
             response_object = {
                 'status': 'fail',
-                'message': 'Try again'
+                'message': 'Try again',
+                'status_code': 500
             }
             return make_response(jsonify(response_object)), 500
 
@@ -102,6 +105,7 @@ class UserAPI(MethodView):
             except IndexError:
                 response_object = {
                     'status': 'fail',
+                    'status_code': 401,
                     'message': 'Bearer token malformed.'
                 }
                 return make_response(jsonify(response_object)), 401
@@ -113,6 +117,7 @@ class UserAPI(MethodView):
                 user = User.query.filter_by(id=resp).first()
                 response_object = {
                     'status': 'success',
+                    'status_code': 200,
                     'data': {
                         'user_id': user.id,
                         'email': user.email,
@@ -122,12 +127,14 @@ class UserAPI(MethodView):
                 return make_response(jsonify(response_object)), 200
             response_object = {
                 'status': 'fail',
+                'status_code': 401,
                 'message': resp
             }
             return make_response(jsonify(response_object)), 401
         else:
             response_object = {
                 'status': 'fail',
+                'status_code': 401,
                 'message': 'Provide a valid auth token.'
             }
             return make_response(jsonify(response_object)), 401
@@ -155,24 +162,28 @@ class LogoutAPI(MethodView):
                     db.session.commit()
                     response_object = {
                         'status': 'success',
+                        'status_code': 200,
                         'message': 'Successfully logged out.'
                     }
                     return make_response(jsonify(response_object)), 200
                 except Exception as e:
                     response_object = {
                         'status': 'fail',
+                        'status_code': 200,
                         'message': e
                     }
                     return make_response(jsonify(response_object)), 200
             else:
                 response_object = {
                     'status': 'fail',
+                    'status_code': 401,
                     'message': resp
                 }
                 return make_response(jsonify(response_object)), 401
         else:
             response_object = {
                 'status': 'fail',
+                'status_code': 403,
                 'message': 'Provide a valid auth token.'
             }
             return make_response(jsonify(response_object)), 403

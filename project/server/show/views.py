@@ -24,6 +24,7 @@ class DiscoverAPI(MethodView):
         else:
             response_object = {
                 'status': 'fail',
+                'status_code': 500,
                 'message': 'Failed to communicate with the tmdb API.'
             }
             return make_response(jsonify(response_object)), 500
@@ -44,12 +45,14 @@ class SearchAPI(MethodView):
             else:
                 response_object = {
                     'status': 'fail',
+                    'status_code': 500,
                     'message': 'Failed to communicate with the tmdb API.'
                 }
                 return make_response(jsonify(response_object)), 500    
         else:
             response_object = {
                 'status': 'fail',
+                'status_code': 404,
                 'message': 'You need to specify the searched term.'
             }
             return make_response(jsonify(response_object)), 404
@@ -65,16 +68,19 @@ class DetailAPI(MethodView):
             if (response):
                 data = response.json()
                 response_object = Show.from_dict(data).to_dict()
+                response_object['status_code'] = 200
                 return make_response(jsonify(response_object)), 200
             else:
                 response_object = {
                     'status': 'fail',
+                    'status_code': 500,
                     'message': 'Failed to communicate with the tmdb API.'
                 }
                 return make_response(jsonify(response_object)), 500
         else:
             response_object = {
                 'status': 'fail',
+                'status_code': 404,
                 'message': 'The TMDB id specified is invalid.'
             }
             return make_response(jsonify(response_object)), 404
@@ -94,12 +100,14 @@ class SimilarAPI(MethodView):
             else:
                 response_object = {
                     'status': 'fail',
+                    'status_code': 500,
                     'message': 'Failed to communicate with the tmdb API.'
                 }
                 return make_response(jsonify(response_object)), 500
         else:
             response_object = {
                 'status': 'fail',
+                'status_code': 404,
                 'message': 'The TMDB id specified is invalid.'
             }
             return make_response(jsonify(response_object)), 404
@@ -115,16 +123,19 @@ class SeasonAPI(MethodView):
             if (response):
                 data = response.json()
                 response_object = Season.from_dict(data).to_dict()
+                response_object['status_code'] = 200
                 return make_response(jsonify(response_object)), 200
             else:
                 response_object = {
                     'status': 'fail',
+                    'status_code': 505,
                     'message': 'Failed to communicate with the tmdb API.'
                 }
                 return make_response(jsonify(response_object)), 500
         else:
             response_object = {
                 'status': 'fail',
+                'status_code': 404,
                 'message': 'The TMDB id or the season number specified is invalid.'
             }
             return make_response(jsonify(response_object)), 404

@@ -18,6 +18,7 @@ class Tmdb():
         total_pages = data['total_pages']
         shows = [Show.from_dict(show).to_dict() for show in data['results']]
         return {
+            'status_code': 200,
             'status': 'success',
             'message': 'Successfully got the shows.',
             'results': shows,

@@ -28,24 +28,28 @@ class AddFavouriteAPI(MethodView):
                 except Exception as e:
                     response_object = {
                         'status': 'fail',
+                        'status_code': 500,
                         'message': str(e)
                     }
                     return make_response(jsonify(response_object)), 500
                 else:
                     response_object = {
                         'status': 'success',
+                        'status_code': 200,
                         'message': 'Successfully added the show.'
                     }
                     return make_response(jsonify(response_object)), 200
             else:
                 response_object = {
                     'status': 'fail',
+                    'status_code': 500,
                     'message': 'Provide a valid TMDB id.'
                 }
                 return make_response(jsonify(response_object)), 500            
         else:
             response_object = {
                 'status': 'fail',
+                'status_code': 500,
                 'message': 'Some error occurred. Please try again.'
             }
             return make_response(jsonify(response_object)), 500
@@ -67,24 +71,28 @@ class RemoveFavouriteAPI(MethodView):
                 except Exception as e:
                     response_object = {
                         'status': 'fail',
+                        'status_code': 500,
                         'message': str(e)
                     }
                     return make_response(jsonify(response_object)), 500
                 else:
                     response_object = {
                         'status': 'success',
+                        'status_code': 200,
                         'message': 'Successfully removed the show.'
                     }
                     return make_response(jsonify(response_object)), 200
             else:
                 response_object = {
                     'status': 'fail',
+                    'status_code': 500,
                     'message': 'Provide a valid TMDB id.'
                 }
                 return make_response(jsonify(response_object)), 500            
         else:
             response_object = {
                 'status': 'fail',
+                'status_code': 500,
                 'message': 'Some error occurred. Please try again.'
             }
             return make_response(jsonify(response_object)), 500
@@ -107,6 +115,7 @@ class GetFavouritesAPI(MethodView):
                 favourites = [show.to_dict() for show in user.get_favourites(begin = begin, end = end)]
                 response_object = {
                     'status': 'success',
+                    'status_code': 200,
                     'message': 'Successfully got the shows.',
                     'results': favourites,
                     'page': requested_page,
@@ -117,12 +126,14 @@ class GetFavouritesAPI(MethodView):
             except Exception as e:
                 response_object = {
                     'status': 'fail',
+                    'status_code': 500,
                     'message': str(e)
                 }
                 return make_response(jsonify(response_object)), 500 
         else:
             response_object = {
                 'status': 'fail',
+                'status_code': 500,
                 'message': 'Some error occurred. Please try again.'
             }
             return make_response(jsonify(response_object)), 500
