@@ -71,7 +71,8 @@ class DetailAPI(MethodView):
             if (response):
                 data = response.json()
                 response_object = Show.from_dict(data).to_dict()
-                response_object['is_liked'] = user.has_favourite(tmdb_id)
+                if(user):
+                    response_object['is_liked'] = user.has_favourite(tmdb_id)
                 response_object['status_code'] = 200
                 return make_response(jsonify(response_object)), 200
             else:
