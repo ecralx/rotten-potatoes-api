@@ -18,7 +18,8 @@ class DiscoverAPI(MethodView):
     @with_authorization_middleware
     def get(self, user=None):
         requested_page = request.args.get('page', default = 1, type = int)
-        response = Tmdb.discover(page = requested_page)
+        requested_genres = request.args.get('genres', default = '', type = str)
+        response = Tmdb.discover(page = requested_page, genres = requested_genres)
         if (response):
             response_object = Tmdb.convert_list_to_response_object(response, user)
             return make_response(jsonify(response_object)), 200
@@ -39,8 +40,9 @@ class SearchAPI(MethodView):
     def get(self, user=None):
         requested_query = request.args.get('query', type = str)
         requested_page = request.args.get('page', default = 1, type = int)
+        requested_genres = request.args.get('genres', default = '', type = str)
         if (requested_query):
-            response = Tmdb.search(query = requested_query, page = requested_page)
+            response = Tmdb.search(query = requested_query, page = requested_page, genres = requested_genres)
             if (response):
                 response_object = Tmdb.convert_list_to_response_object(response, user)
                 return make_response(jsonify(response_object)), 200

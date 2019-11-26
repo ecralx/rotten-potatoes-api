@@ -31,21 +31,23 @@ class Tmdb():
         }
 
     @staticmethod
-    def discover(page = 1):
+    def discover(page = 1, genres = ''):
         endpoint = 'discover/tv'
         params = {
             'page': page,
+            'with_genres': genres,
             'api_key': os.getenv('TMDB_API_KEY')
         }
         url = Tmdb.base_url + endpoint + "?"
         return requests.get(url, params=params)
 
     @staticmethod
-    def search(query, page = 1):
+    def search(query, page = 1, genres = ''):
         endpoint = 'search/tv'
         params = {
             'query': query,
             'page': page,
+            'with_genres': genres,
             'api_key': os.getenv('TMDB_API_KEY')
         }
         url = Tmdb.base_url + endpoint + "?"
