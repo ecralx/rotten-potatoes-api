@@ -42,12 +42,11 @@ class Tmdb():
         return requests.get(url, params=params)
 
     @staticmethod
-    def search(query, page = 1, genres = ''):
+    def search(query, page = 1):
         endpoint = 'search/tv'
         params = {
             'query': query,
             'page': page,
-            'with_genres': genres,
             'api_key': os.getenv('TMDB_API_KEY')
         }
         url = Tmdb.base_url + endpoint + "?"
