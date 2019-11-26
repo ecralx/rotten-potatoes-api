@@ -5,6 +5,9 @@ from functools import wraps
 from project.server.models import User
 
 def with_authorization_middleware(fn):
+    """
+    Checks if there's an Authorization header in the request and supplies the valid user to the function (view)
+    """
     @wraps(fn)
     def wrapper(*args, **kwargs):
         # get the auth token
@@ -28,6 +31,10 @@ def with_authorization_middleware(fn):
     return wrapper
 
 def auth_middleware(fn):
+    """
+    Checks if there's an Authorization header in the request and supplies the valid user to the function (view)
+    Aborts if there's any problem with the header (user must be logged in)
+    """
     @wraps(fn)
     def wrapper(*args, **kwargs):
         # get the auth token
