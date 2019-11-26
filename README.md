@@ -1,38 +1,10 @@
-# Flask JWT Auth
+# rotten-potatoes-api
 
-[![Build Status](https://travis-ci.org/realpython/flask-jwt-auth.svg?branch=master)](https://travis-ci.org/realpython/flask-jwt-auth)
+School project.
+Forked from [flask-jwt-auth](https://github.com/realpython/flask-jwt-auth)
 
-## Want to learn how to build this project?
-
-Check out the [blog post](https://realpython.com/blog/python/token-based-authentication-with-flask/).
-
-## Want to use this project?
-
-### Basics
-
-1. Fork/Clone
-1. Activate a virtualenv
-1. Install the requirements
-
-### Set Environment Variables
-
-Update *project/server/config.py*, and then run:
-
-```sh
-$ export APP_SETTINGS="project.server.config.DevelopmentConfig"
-```
-
-or
-
-```sh
-$ export APP_SETTINGS="project.server.config.ProductionConfig"
-```
-
-Set a SECRET_KEY:
-
-```sh
-$ export SECRET_KEY="change_me"
-```
+### Env variables
+Copy/paste "*.env.example*" and rename it to "*.env*" before opening it with a text editor. Set all the variables after the comment.
 
 ### Create DB
 
