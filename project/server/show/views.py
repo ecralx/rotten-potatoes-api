@@ -7,6 +7,7 @@ from flask.views import MethodView
 
 from project.server import bcrypt, db
 from project.server.models import Tmdb, Show, Season
+from project.server.middlewares import with_authorization_middleware
 
 show_blueprint = Blueprint('show', __name__)
 
@@ -14,12 +15,12 @@ class DiscoverAPI(MethodView):
     """
     Discover tv shows resource
     """
-
-    def get(self):
+    @with_authorization_middleware
+    def get(self, user=None):
         requested_page = request.args.get('page', default = 1, type = int)
         response = Tmdb.discover(page = requested_page)
         if (response):
-            response_object = Tmdb.convert_list_to_response_object(response)
+            response_object = Tmdb.convert_list_to_response_object(response, user)
             return make_response(jsonify(response_object)), 200
         else:
             response_object = {
@@ -33,14 +34,15 @@ class SearchAPI(MethodView):
     """
     Search tv shows resource
     """
-
-    def get(self):
+    
+    @with_authorization_middleware
+    def get(self, user=None):
         requested_query = request.args.get('query', type = str)
         requested_page = request.args.get('page', default = 1, type = int)
         if (requested_query):
             response = Tmdb.search(query = requested_query, page = requested_page)
             if (response):
-                response_object = Tmdb.convert_list_to_response_object(response)
+                response_object = Tmdb.convert_list_to_response_object(response, user)
                 return make_response(jsonify(response_object)), 200
             else:
                 response_object = {
@@ -61,13 +63,14 @@ class DetailAPI(MethodView):
     """
     Search tv shows resource
     """
-
-    def get(self, tmdb_id):
+    @with_authorization_middleware
+    def get(self, tmdb_id, user=None):
         if (((isinstance(tmdb_id, str) and tmdb_id.isdecimal()) or (isinstance(tmdb_id, int))) and int(tmdb_id) > 0):
             response = Tmdb.detail(tmdb_id = int(tmdb_id))
             if (response):
                 data = response.json()
                 response_object = Show.from_dict(data).to_dict()
+                response_object['is_liked'] = user.has_favourite(tmdb_id)
                 response_object['status_code'] = 200
                 return make_response(jsonify(response_object)), 200
             else:
@@ -89,13 +92,13 @@ class SimilarAPI(MethodView):
     """
     Similar tv shows resource
     """
-
-    def get(self, tmdb_id):
+    @with_authorization_middleware
+    def get(self, tmdb_id, user=None):
         requested_page = request.args.get('page', default = 1, type = int)
         if (((isinstance(tmdb_id, str) and tmdb_id.isdecimal()) or (isinstance(tmdb_id, int))) and int(tmdb_id) > 0):
             response = Tmdb.similar(tmdb_id = tmdb_id, page = requested_page)
             if (response):
-                response_object = Tmdb.convert_list_to_response_object(response)
+                response_object = Tmdb.convert_list_to_response_object(response, user)
                 return make_response(jsonify(response_object)), 200
             else:
                 response_object = {

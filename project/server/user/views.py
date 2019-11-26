@@ -113,6 +113,8 @@ class GetFavouritesAPI(MethodView):
                 total_results = len(user.favourites)
                 total_pages = ceil(total_results / OFFSET)
                 favourites = [show.to_dict() for show in user.get_favourites(begin = begin, end = end)]
+                for favourite in favourites:
+                    favourite['is_liked'] = True
                 response_object = {
                     'status': 'success',
                     'status_code': 200,

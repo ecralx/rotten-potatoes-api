@@ -34,7 +34,7 @@ class User(db.Model):
         """
         try:
             payload = {
-                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=0, seconds=5),
+                'exp': datetime.datetime.utcnow() + datetime.timedelta(days=1, seconds=5),
                 'iat': datetime.datetime.utcnow(),
                 'sub': user_id
             }
@@ -65,13 +65,20 @@ class User(db.Model):
         except jwt.InvalidTokenError:
             return 'Invalid token. Please log in again.'
 
+    def has_favourite(self, tmdb_id):
+        """
+        Checks if user has already the show in his favs
+        :param tmdb_id:
+        """
+        is_already_in_favs = len([favourite for favourite in self.favourites if favourite.tmdb_id == int(tmdb_id)]) > 0
+        return is_already_in_favs
+
     def add_favourite(self, tmdb_id):
         """
         Adds a favourite show to the user
         :param tmdb_id:
         """
-        is_already_in_favs = len([favourite for favourite in self.favourites if favourite.tmdb_id == int(tmdb_id)]) > 0
-        if (not is_already_in_favs):
+        if (not self.has_favourite(tmdb_id)):
             favourite = Favourite(user_id = int(self.id), tmdb_id = int(tmdb_id))
             self.favourites.append(favourite)
         else:
@@ -82,13 +89,12 @@ class User(db.Model):
         Removes a favourite show to the user
         :param tmdb_id:
         """
-        is_already_in_favs = len([favourite for favourite in self.favourites if favourite.tmdb_id == int(tmdb_id)]) > 0
-        if (is_already_in_favs):
+        if (self.has_favourite(tmdb_id)):
             self.favourites = [favourite for favourite in self.favourites if favourite.tmdb_id != int(tmdb_id) ]
         else:
             raise Exception('Cannot remove an inexistant favourite')
 
-    def get_favourites(self, begin = 0, end = 10):
+    def get_favourites(self, begin = 0, end = 20):
         favourites = self.favourites[begin:end]
         favourite_shows = []
         for favourite in favourites:

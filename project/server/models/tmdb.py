@@ -11,12 +11,15 @@ class Tmdb():
     base_url = 'https://api.themoviedb.org/3/'
     
     @staticmethod
-    def convert_list_to_response_object(response):
+    def convert_list_to_response_object(response, user=None):
         data = response.json()
         page = data['page']
         total_results = data['total_results']
         total_pages = data['total_pages']
         shows = [Show.from_dict(show).to_dict() for show in data['results']]
+        if (user):
+            for show in shows:
+                show['is_liked'] = user.has_favourite(show.get('tmdb_id'))
         return {
             'status_code': 200,
             'status': 'success',
